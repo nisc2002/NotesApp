@@ -27,6 +27,6 @@ void main() {
   test("should add note to repository", () async {
     //when(mockRepo.addNote(any)).thenAnswer((realInvocation) => null);
      mockRepo.noteList.add(tNote);
-     expect(mockRepo.noteList[0] == tNote, true);
+     expect(mockRepo.noteList[0], tNote);
   });
 }
