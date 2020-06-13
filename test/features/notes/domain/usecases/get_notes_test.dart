@@ -20,7 +20,7 @@ void main() {
   final Color tColor = Colors.blue;
 
   List<Note> tList = [
-    Note(color: Colors.blue, text: "Note 1", date: null),
+    Note(color: Colors.blue, text: "Note 1", date: DateTime.utc(2020, 6, 12)),
     //Note(color: Colors.green, text: "Note 2", date: null),
     //Note(color: Colors.red, text: "Note 3", date: null)
   ];

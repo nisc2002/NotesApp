@@ -21,7 +21,7 @@ class Loading extends NoteState {
 
 class Loaded extends NoteState {
   final List<Note> notes;
-  Loaded(this.notes);
+  Loaded({this.notes});
 
   @override
   List<Object> get props => [notes];
@@ -29,7 +29,7 @@ class Loaded extends NoteState {
 
 class Error extends NoteState {
   final String message;
-  Error(this.message);
+  Error({this.message});
 
   @override
   List<Object> get props => [message];
