@@ -1,3 +1,3 @@
 # NotesApp
-Note App made with Flutter
+Note App made with Flutter\
 Test-Driven-Development Test
