@@ -4,6 +4,7 @@ import 'package:note_app/features/notes/domain/entities/note.dart';
 import 'package:note_app/features/notes/presentation/bloc/note_bloc.dart';
 import 'package:note_app/features/notes/presentation/widgets/add_note_widget.dart';
 import 'package:note_app/features/notes/presentation/widgets/color_search_widget.dart';
+import 'package:note_app/features/notes/presentation/widgets/note_widget.dart';
 import '../../../../injection_container.dart';
 
 class NotePage extends StatelessWidget {
@@ -35,7 +36,7 @@ class NotePage extends StatelessWidget {
         children: <Widget>[
           ColorSearchWidget(), //put into build functions
           //Expanded(child: buildError("Failed to get notes", context)),
-          Expanded(child: buildEmpty(context)),
+          Expanded(child: buildLoaded([])),
         ],
       ),
     );
@@ -46,11 +47,43 @@ class NotePage extends StatelessWidget {
   }
 
   Widget buildLoaded(List<Note> notes) {
-    return ListView.builder(
-      itemCount: notes.length,
-      itemBuilder: (BuildContext context, int index) {
-        return;
-      },
+    notes = [
+      Note(color: Colors.green, text: "dlkfj", date: DateTime.now()),
+      Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
+      Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
+      Note(color: Colors.green, text: "dlkfj", date: DateTime.now()),
+      Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
+      Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
+      Note(color: Colors.green, text: "dlkfj", date: DateTime.now()),
+      Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
+      Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
+    ];
+    return Stack(
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.blue, Colors.purple, Colors.red],
+                  begin: Alignment.bottomLeft,
+                  end: Alignment.topRight)),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Scrollbar(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+              ),
+              itemCount: notes.length,
+              itemBuilder: (BuildContext context, int index) {
+                return NoteWidget(notes[index]);
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 
