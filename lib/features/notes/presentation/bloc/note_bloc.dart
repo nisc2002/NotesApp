@@ -21,7 +21,9 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   NoteBloc(
       {@required this.getNotes,
       @required this.getNotesByColor,
-      @required this.addNote});
+      @required this.addNote}) {
+    print("initialized");
+  }
 
   @override
   NoteState get initialState => Initial();
@@ -42,8 +44,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       } on StorageFailure {
         yield Error(message: "Storage Failure");
       }
-    }
-    else if (event is GetNotesByColorEvent) {
+    } else if (event is GetNotesByColorEvent) {
       try {
         final List<Note> notes = await getNotesByColor(event.color);
         if (notes.isNotEmpty) {
@@ -54,8 +55,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       } on StorageFailure {
         yield Error(message: "Storage Failure");
       }
-    }
-    else if (event is AddNoteEvent) {
+    } else if (event is AddNoteEvent) {
       //TODO: implement result
       try {
         await addNote(event.note);

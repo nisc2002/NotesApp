@@ -2,25 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/features/notes/domain/entities/note.dart';
 import 'package:note_app/features/notes/presentation/bloc/note_bloc.dart';
-import 'package:note_app/features/notes/presentation/widgets/add_note_widget.dart';
-import 'package:note_app/features/notes/presentation/widgets/color_search_widget.dart';
+import 'package:note_app/features/notes/presentation/pages/add_note_page.dart';
 import 'package:note_app/features/notes/presentation/widgets/note_widget.dart';
-import '../../../../injection_container.dart';
 
 class NotePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var bloc = BlocProvider.of<NoteBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Notes"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () => showModalBottomSheet(
-              context: context,
-              builder: (_) {
-                return AddNoteWidget();
-              },
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider.value(
+                  value: bloc,
+                  child: AddNotePage(),
+                ),
+              ),
             ),
           ),
         ],
@@ -30,15 +32,28 @@ class NotePage extends StatelessWidget {
   }
 
   Widget buildBody(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<NoteBloc>(),
-      child: Column(
+    return BlocBuilder<NoteBloc, NoteState>(
+      builder: (BuildContext context, state) {
+        if (state is Initial) {
+          return buildError("yy", context);
+        } else if (state is Loaded) {
+          return buildEmpty(context);
+        } else if (state is Empty) {
+          return buildEmpty(context);
+        } else if (state is Error) {
+          return buildError(state.message, context);
+        } else if (state is Loading) {
+          //BlocProvider.of<NoteBloc>(context).add(GetNotesEvent);
+          return buildLoading();
+        }
+      },
+      /*child: Column(
         children: <Widget>[
           ColorSearchWidget(), //put into build functions
           //Expanded(child: buildError("Failed to get notes", context)),
           Expanded(child: buildLoaded([])),
         ],
-      ),
+      ),*/
     );
   }
 
@@ -109,9 +124,18 @@ class NotePage extends StatelessWidget {
         ),
         FlatButton(
           child: Text("Try again"),
-          onPressed: () {},
+          onPressed: () {
+            BlocProvider.of<NoteBloc>(context).add(GetNotesEvent());
+          },
           color: Colors.grey[300],
-        )
+        ),
+        FlatButton(
+          child: Text("add note"),
+          onPressed: () {
+            Navigator.pushNamed(context, "/add");
+          },
+          color: Colors.grey[300],
+        ),
       ],
     );
   }

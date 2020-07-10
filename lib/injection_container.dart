@@ -16,6 +16,7 @@ import 'features/notes/presentation/bloc/note_bloc.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  print("dependency injection");
   // Features
 
   sl.registerFactory(() => NoteBloc(
@@ -30,7 +31,8 @@ Future<void> init() async {
 
   sl.registerLazySingleton<NoteRepository>(() => NoteRepositoryImpl(sl()));
 
-  sl.registerLazySingleton<NoteLocalDataSource>(() => NoteLocalDataSourceImpl(sl()));
+  sl.registerLazySingleton<NoteLocalDataSource>(
+      () => NoteLocalDataSourceImpl(sl()));
 
   // External
 
