@@ -1,4 +1,5 @@
 import 'package:note_app/features/notes/data/datasources/note_local_datasource.dart';
+import 'package:note_app/features/notes/data/models/note_model.dart';
 import 'package:note_app/features/notes/domain/entities/note.dart';
 import 'dart:ui';
 import 'package:note_app/features/notes/domain/repositories/note_repository.dart';
@@ -10,12 +11,13 @@ class NoteRepositoryImpl implements NoteRepository {
 
   @override
   Future<void> addNote(Note note) async {
-    localDataSource.addNote(note);
+    localDataSource.addNote(
+        NoteModel(text: note.text, color: note.color, date: note.date));
   }
 
   @override
   Future<List<Note>> getNotes() async {
-    return await localDataSource.getNotes(); 
+    return await localDataSource.getNotes();
   }
 
   @override

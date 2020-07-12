@@ -60,6 +60,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       try {
         await addNote(event.note);
         //this.add(event)
+        this.add(GetNotesEvent());
       } on StorageFailure {
         yield Error(message: "Storage Failure");
       }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/features/notes/domain/entities/note.dart';
 import 'package:note_app/features/notes/presentation/bloc/note_bloc.dart';
 import 'package:note_app/features/notes/presentation/pages/add_note_page.dart';
+import 'package:note_app/features/notes/presentation/widgets/color_search_widget.dart';
 import 'package:note_app/features/notes/presentation/widgets/note_widget.dart';
 
 class NotePage extends StatelessWidget {
@@ -37,7 +38,7 @@ class NotePage extends StatelessWidget {
         if (state is Initial) {
           return buildError("yy", context);
         } else if (state is Loaded) {
-          return buildEmpty(context);
+          return buildLoaded(state.notes);
         } else if (state is Empty) {
           return buildEmpty(context);
         } else if (state is Error) {
@@ -62,7 +63,7 @@ class NotePage extends StatelessWidget {
   }
 
   Widget buildLoaded(List<Note> notes) {
-    notes = [
+    /*notes = [
       Note(color: Colors.green, text: "dlkfj", date: DateTime.now()),
       Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
       Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
@@ -72,30 +73,37 @@ class NotePage extends StatelessWidget {
       Note(color: Colors.green, text: "dlkfj", date: DateTime.now()),
       Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
       Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
-    ];
-    return Stack(
+    ];*/
+    return Column(
       children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.blue, Colors.purple, Colors.red],
-                  begin: Alignment.bottomLeft,
-                  end: Alignment.topRight)),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Scrollbar(
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
+        ColorSearchWidget(),
+        Expanded(
+          child: Stack(
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Colors.blue, Colors.purple, Colors.red],
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.topRight)),
               ),
-              itemCount: notes.length,
-              itemBuilder: (BuildContext context, int index) {
-                return NoteWidget(notes[index]);
-              },
-            ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Scrollbar(
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
+                    ),
+                    itemCount: notes.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return NoteWidget(notes[index]);
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -103,40 +111,49 @@ class NotePage extends StatelessWidget {
   }
 
   Widget buildEmpty(BuildContext context) {
-    return Center(
-        child: Text(
-      "No notes added yet",
-      style: Theme.of(context).textTheme.headline5,
-    ));
+    return Column(
+      children: <Widget>[
+        ColorSearchWidget(),
+        Expanded(
+          child: Center(
+              child: Text(
+            "No notes found",
+            style: Theme.of(context).textTheme.headline5,
+          )),
+        ),
+      ],
+    );
   }
 
   Widget buildError(String message, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      //crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Text(
-          "Error: $message",
-          style: Theme.of(context).textTheme.headline5,
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        FlatButton(
-          child: Text("Try again"),
-          onPressed: () {
-            BlocProvider.of<NoteBloc>(context).add(GetNotesEvent());
-          },
-          color: Colors.grey[300],
-        ),
-        FlatButton(
-          child: Text("add note"),
-          onPressed: () {
-            Navigator.pushNamed(context, "/add");
-          },
-          color: Colors.grey[300],
-        ),
-      ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        //crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            "Error: $message",
+            style: Theme.of(context).textTheme.headline5,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          FlatButton(
+            child: Text("Try again"),
+            onPressed: () {
+              BlocProvider.of<NoteBloc>(context).add(GetNotesEvent());
+            },
+            color: Colors.grey[300],
+          ),
+          /*FlatButton(
+            child: Text("add note"),
+            onPressed: () {
+              Navigator.pushNamed(context, "/add");
+            },
+            color: Colors.grey[300],
+          ),*/
+        ],
+      ),
     );
   }
 }

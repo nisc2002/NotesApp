@@ -49,6 +49,7 @@ class AddNotePage extends StatelessWidget {
                       ),
                     ),
                   );
+                  Navigator.of(context).pop();
                 }
               },
             ),
