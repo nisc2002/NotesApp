@@ -14,7 +14,7 @@ class ColorBarWidget extends StatelessWidget {
     Colors.yellow[600],
     Colors.green,
     Colors.blue[600],
-    Colors.purple,
+    Colors.purple[400],
   ];
 
   @override
@@ -23,19 +23,32 @@ class ColorBarWidget extends StatelessWidget {
       padding: EdgeInsets.all(5),
       color: Colors.grey[200],
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(colors.length, (index) {
-          return colorButton(colors[index], selectedColor, context, onTap);
-        }),
-      ),
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Container(
+              width: 35,
+              height: 35,
+              child: FlatButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  onTap(Colors.white);
+                },
+                child: Text(
+                  "None",
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+            ),
+            ...List.generate(colors.length, (index) {
+              return colorButton(colors[index], selectedColor, context, onTap);
+            }),
+          ]),
     );
   }
 
   Widget colorButton(
       Color color, Color selected, BuildContext context, Function onTap) {
     return InkWell(
-        //customBorder: Border.all(color: Colors.black, width: 2),
-        /*borderRadius: BorderRadius.circular(15),*/
         child: Container(
           decoration: selected == color
               ? BoxDecoration(
@@ -49,8 +62,6 @@ class ColorBarWidget extends StatelessWidget {
         ),
         onTap: () {
           onTap(color);
-          /*print("${color.toString()}");
-          BlocProvider.of<NoteBloc>(context).add(GetNotesByColorEvent(color));*/
         });
   }
 }
@@ -63,7 +74,11 @@ class ColorSearchWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ColorBarWidget(
       onTap: (color) {
-        BlocProvider.of<NoteBloc>(context).add(GetNotesByColorEvent(color));
+        if (color == Colors.white) {
+          BlocProvider.of<NoteBloc>(context).add(GetNotesEvent());
+        } else {
+          BlocProvider.of<NoteBloc>(context).add(GetNotesByColorEvent(color));
+        }
       },
       selectedColor: selected,
     );
