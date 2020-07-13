@@ -37,7 +37,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       try {
         final List<Note> notes = await getNotes();
         if (notes.isNotEmpty) {
-          yield Loaded(notes: notes);
+          yield Loaded(notes: notes, selected: null);
         } else {
           yield Empty();
         }
@@ -48,9 +48,9 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       try {
         final List<Note> notes = await getNotesByColor(event.color);
         if (notes.isNotEmpty) {
-          yield Loaded(notes: notes);
+          yield Loaded(notes: notes, selected: event.color);
         } else {
-          yield Empty();
+          yield Empty(selected: event.color);
         }
       } on StorageFailure {
         yield Error(message: "Storage Failure");

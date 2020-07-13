@@ -10,6 +10,9 @@ class Initial extends NoteState {
 }
 
 class Empty extends NoteState {
+  final Color selected;
+  Empty({this.selected});
+
   @override
   List<Object> get props => [];
 }
@@ -21,7 +24,8 @@ class Loading extends NoteState {
 
 class Loaded extends NoteState {
   final List<Note> notes;
-  Loaded({this.notes});
+  final Color selected;
+  Loaded({@required this.notes, @required this.selected});
 
   @override
   List<Object> get props => [notes];

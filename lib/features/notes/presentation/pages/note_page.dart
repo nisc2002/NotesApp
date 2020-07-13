@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/features/notes/domain/entities/note.dart';
 import 'package:note_app/features/notes/presentation/bloc/note_bloc.dart';
 import 'package:note_app/features/notes/presentation/pages/add_note_page.dart';
-import 'package:note_app/features/notes/presentation/widgets/color_search_widget.dart';
+import 'package:note_app/features/notes/presentation/widgets/color_bar_widget.dart';
 import 'package:note_app/features/notes/presentation/widgets/note_widget.dart';
 
 class NotePage extends StatelessWidget {
@@ -38,9 +38,9 @@ class NotePage extends StatelessWidget {
         if (state is Initial) {
           return buildError("yy", context);
         } else if (state is Loaded) {
-          return buildLoaded(state.notes);
+          return buildLoaded(state.notes, state.selected);
         } else if (state is Empty) {
-          return buildEmpty(context);
+          return buildEmpty(state.selected, context);
         } else if (state is Error) {
           return buildError(state.message, context);
         } else if (state is Loading) {
@@ -62,7 +62,7 @@ class NotePage extends StatelessWidget {
     return CircularProgressIndicator();
   }
 
-  Widget buildLoaded(List<Note> notes) {
+  Widget buildLoaded(List<Note> notes, Color selected) {
     /*notes = [
       Note(color: Colors.green, text: "dlkfj", date: DateTime.now()),
       Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
@@ -76,7 +76,9 @@ class NotePage extends StatelessWidget {
     ];*/
     return Column(
       children: <Widget>[
-        ColorSearchWidget(),
+        ColorSearchWidget(
+          selected: selected,
+        ),
         Expanded(
           child: Stack(
             children: <Widget>[
@@ -110,10 +112,10 @@ class NotePage extends StatelessWidget {
     );
   }
 
-  Widget buildEmpty(BuildContext context) {
+  Widget buildEmpty(Color selected, BuildContext context) {
     return Column(
       children: <Widget>[
-        ColorSearchWidget(),
+        ColorSearchWidget(selected: selected),
         Expanded(
           child: Center(
               child: Text(
