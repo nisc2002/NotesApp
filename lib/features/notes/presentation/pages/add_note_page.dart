@@ -16,7 +16,7 @@ class AddNotePage extends StatefulWidget {
 
 class _AddNotePageState extends State<AddNotePage> {
   String txtNote;
-  Color selected;
+  Color selected = Colors.white;
 
   void selectColor(Color color) {
     setState(() {

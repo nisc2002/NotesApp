@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:note_app/core/error/failure.dart';
 import 'package:note_app/features/notes/domain/entities/note.dart';
 import 'package:note_app/features/notes/domain/usecases/add_note.dart';
+import 'package:note_app/features/notes/domain/usecases/delete_note.dart';
 import 'package:note_app/features/notes/domain/usecases/get_notes.dart';
 import 'package:note_app/features/notes/domain/usecases/get_notes_by_color.dart';
 
@@ -17,16 +18,22 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   final GetNotes getNotes;
   final GetNotesByColor getNotesByColor;
   final AddNote addNote;
+  final DeleteNote deleteNote;
 
   NoteBloc(
       {@required this.getNotes,
       @required this.getNotesByColor,
-      @required this.addNote}) {
-    print("initialized");
+      @required this.addNote,
+      @required this.deleteNote}) {
+    this.add(GetNotesEvent());
   }
 
   @override
-  NoteState get initialState => Initial();
+  NoteState get initialState {
+    print("initial");
+    //this.add(GetNotesEvent());
+    return Initial();
+  }
 
   @override
   Stream<NoteState> mapEventToState(
@@ -46,7 +53,13 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       }
     } else if (event is GetNotesByColorEvent) {
       try {
-        final List<Note> notes = await getNotesByColor(event.color);
+        List<Note> notes;
+        if (event.color == Colors.white) {
+          //get all notes if no color
+          notes = await getNotes();
+        } else {
+          notes = await getNotesByColor(event.color);
+        }
         if (notes.isNotEmpty) {
           yield Loaded(notes: notes, selected: event.color);
         } else {
@@ -56,11 +69,17 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
         yield Error(message: "Storage Failure");
       }
     } else if (event is AddNoteEvent) {
-      //TODO: implement result
       try {
         await addNote(event.note);
-        //this.add(event)
         this.add(GetNotesEvent());
+      } on StorageFailure {
+        yield Error(message: "Storage Failure");
+      }
+    } else if (event is DeleteNoteEvent) {
+      try {
+        await deleteNote(event.note);
+        print(event.previouslySelected);
+        this.add(GetNotesByColorEvent(event.previouslySelected));
       } on StorageFailure {
         yield Error(message: "Storage Failure");
       }

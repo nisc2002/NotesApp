@@ -7,6 +7,7 @@ abstract class NoteLocalDataSource {
   Future<List<Note>> getNotes();
   Future<List<Note>> getNotesByColor(Color color);
   Future<void> addNote(NoteModel note);
+  Future<void> deleteNote(NoteModel note);
 }
 
 class NoteLocalDataSourceImpl implements NoteLocalDataSource {
@@ -27,7 +28,15 @@ class NoteLocalDataSourceImpl implements NoteLocalDataSource {
 
   @override
   Future<List<Note>> getNotesByColor(Color color) async {
-    var result = await database.query("notes", where: "color = ${color.value}"); 
+    var result = await database.query("notes", where: "color = ${color.value}");
     return result.map((e) => NoteModel.fromMap(e)).toList();
+  }
+
+  @override
+  Future<void> deleteNote(NoteModel note) async {
+    var map = note.toMap();
+    await database.delete("notes",
+        where:
+            "text = '${map["text"]}' AND color = ${map["color"]} AND date = '${map["date"]}'");
   }
 }

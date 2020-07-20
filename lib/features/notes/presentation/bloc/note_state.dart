@@ -25,7 +25,7 @@ class Loading extends NoteState {
 class Loaded extends NoteState {
   final List<Note> notes;
   final Color selected;
-  Loaded({@required this.notes, @required this.selected});
+  Loaded({@required this.notes, this.selected = Colors.white});
 
   @override
   List<Object> get props => [notes];

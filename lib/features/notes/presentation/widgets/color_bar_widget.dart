@@ -8,13 +8,13 @@ class ColorBarWidget extends StatelessWidget {
 
   ColorBarWidget({this.onTap, this.selectedColor});
 
-  List<Color> colors = [
+  final List<Color> colors = [
     Colors.red,
     Colors.orange,
     Colors.yellow[600],
     Colors.green,
     Colors.blue[600],
-    Colors.purple[400],
+    Colors.purple[300],
   ];
 
   @override

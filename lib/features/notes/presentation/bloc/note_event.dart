@@ -24,3 +24,12 @@ class AddNoteEvent extends NoteEvent {
   @override
   List<Object> get props => [note];
 }
+
+class DeleteNoteEvent extends NoteEvent {
+  final Note note;
+  final Color previouslySelected;
+  DeleteNoteEvent(this.note, this.previouslySelected);
+
+  @override
+  List<Object> get props => [note];
+}

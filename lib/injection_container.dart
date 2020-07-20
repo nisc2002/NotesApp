@@ -11,6 +11,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'features/notes/domain/usecases/add_note.dart';
+import 'features/notes/domain/usecases/delete_note.dart';
 import 'features/notes/presentation/bloc/note_bloc.dart';
 
 final sl = GetIt.instance;
@@ -23,11 +24,13 @@ Future<void> init() async {
         getNotes: sl(),
         getNotesByColor: sl(),
         addNote: sl(),
+        deleteNote: sl(),
       ));
 
   sl.registerLazySingleton(() => GetNotes(sl()));
   sl.registerLazySingleton(() => GetNotesByColor(sl()));
   sl.registerLazySingleton(() => AddNote(sl()));
+  sl.registerLazySingleton(() => DeleteNote(sl()));
 
   sl.registerLazySingleton<NoteRepository>(() => NoteRepositoryImpl(sl()));
 

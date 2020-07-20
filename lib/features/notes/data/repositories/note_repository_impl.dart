@@ -11,7 +11,7 @@ class NoteRepositoryImpl implements NoteRepository {
 
   @override
   Future<void> addNote(Note note) async {
-    localDataSource.addNote(
+    await localDataSource.addNote(
         NoteModel(text: note.text, color: note.color, date: note.date));
   }
 
@@ -23,5 +23,11 @@ class NoteRepositoryImpl implements NoteRepository {
   @override
   Future<List<Note>> getNotesByColor(Color color) async {
     return await localDataSource.getNotesByColor(color);
+  }
+
+  @override
+  Future<void> deleteNote(Note note) async {
+    await localDataSource.deleteNote(
+        NoteModel(text: note.text, color: note.color, date: note.date));
   }
 }

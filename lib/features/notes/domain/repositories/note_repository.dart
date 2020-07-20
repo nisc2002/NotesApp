@@ -6,4 +6,5 @@ abstract class NoteRepository {
   Future<List<Note>> getNotes();
   Future<List<Note>> getNotesByColor(Color color);
   Future<void> addNote(Note note);
+  Future<void> deleteNote(Note note);
 }

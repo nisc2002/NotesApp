@@ -9,7 +9,6 @@ import 'package:note_app/features/notes/presentation/widgets/note_widget.dart';
 class NotePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var bloc = BlocProvider.of<NoteBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Notes"),
@@ -19,14 +18,26 @@ class NotePage extends StatelessWidget {
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BlocProvider.value(
-                  value: bloc,
+                builder: (ctx) => BlocProvider.value(
+                  value: BlocProvider.of<NoteBloc>(context),
                   child: AddNotePage(),
                 ),
               ),
             ),
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            DrawerHeader(
+              child: Text("Drawer"),
+              decoration: BoxDecoration(color: Theme.of(context).accentColor),
+            ),
+            ListTile(onTap: () {}, title: Text("Notes")),
+            ListTile(onTap: () {}, title: Text("Delete all notes")),
+          ],
+        ),
       ),
       body: buildBody(context),
     );
@@ -44,17 +55,9 @@ class NotePage extends StatelessWidget {
         } else if (state is Error) {
           return buildError(state.message, context);
         } else if (state is Loading) {
-          //BlocProvider.of<NoteBloc>(context).add(GetNotesEvent);
           return buildLoading();
         }
       },
-      /*child: Column(
-        children: <Widget>[
-          ColorSearchWidget(), //put into build functions
-          //Expanded(child: buildError("Failed to get notes", context)),
-          Expanded(child: buildLoaded([])),
-        ],
-      ),*/
     );
   }
 
@@ -63,17 +66,6 @@ class NotePage extends StatelessWidget {
   }
 
   Widget buildLoaded(List<Note> notes, Color selected) {
-    /*notes = [
-      Note(color: Colors.green, text: "dlkfj", date: DateTime.now()),
-      Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
-      Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
-      Note(color: Colors.green, text: "dlkfj", date: DateTime.now()),
-      Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
-      Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
-      Note(color: Colors.green, text: "dlkfj", date: DateTime.now()),
-      Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
-      Note(color: Colors.blue, text: "dlkfdsfj", date: DateTime.now()),
-    ];*/
     return Column(
       children: <Widget>[
         ColorSearchWidget(
@@ -83,24 +75,23 @@ class NotePage extends StatelessWidget {
           child: Stack(
             children: <Widget>[
               Container(
-                decoration: BoxDecoration(
+                /*decoration: BoxDecoration(
                     gradient: LinearGradient(
                         colors: [Colors.blue, Colors.purple, Colors.red],
                         begin: Alignment.bottomLeft,
-                        end: Alignment.topRight)),
+                        end: Alignment.topRight)),*/
+                color: Colors.grey[300],
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Scrollbar(
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8,
-                    ),
+                  child: ListView.builder(
                     itemCount: notes.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return NoteWidget(notes[index]);
+                    itemBuilder: (context, index) {
+                      return NoteWidget(notes[index], (Note note) {
+                        BlocProvider.of<NoteBloc>(context).add(
+                            DeleteNoteEvent(note, selected ?? Colors.white));
+                      });
                     },
                   ),
                 ),
@@ -147,13 +138,6 @@ class NotePage extends StatelessWidget {
             },
             color: Colors.grey[300],
           ),
-          /*FlatButton(
-            child: Text("add note"),
-            onPressed: () {
-              Navigator.pushNamed(context, "/add");
-            },
-            color: Colors.grey[300],
-          ),*/
         ],
       ),
     );
